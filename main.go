@@ -1,29 +1,46 @@
 package main
 
 import (
+	"context"
 	"log"
-	"net/http"
 	"os"
+	"os/signal"
+	"strconv"
+	"time"
 
-	"github.com/gin-gonic/gin"
+	"github-oauth-proxy/pkg/proxy"
 )
 
-func hello(c *gin.Context) {
-	c.String(http.StatusOK, "Hello World!")
-}
-
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
+	portStr := os.Getenv("PORT")
+	if portStr == "" {
 		log.Fatal("$PORT must be set")
 	}
+	port, err := strconv.Atoi(portStr)
+	if err != nil {
+		log.Fatal("$PORT must be an integer")
+	}
 
-	router := gin.New()
-	router.Use(gin.Logger())
+	done := make(chan error, 1)
+	defer close(done)
+	server := proxy.NewProxy(proxy.Config{Port: port}, done)
+	server.Run()
 
-	router.GET("/", hello)
-
-	if err := router.Run(":" + port); err != nil {
-		log.Fatal(err)
+	quit := make(chan os.Signal)
+	defer close(quit)
+	signal.Notify(quit, os.Interrupt)
+	select {
+	case <-quit:
+		// Wait for interrupt signal to gracefully shutdown the server with
+		// a timeout of 5 seconds.
+		log.Println("Shutdown Server ...")
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		if err := server.Shutdown(ctx); err != nil {
+			log.Fatal("Server Shutdown:", err)
+		}
+		log.Println("Server exiting")
+	case err := <-done:
+		log.Printf("listen: %s\n", err)
 	}
 }

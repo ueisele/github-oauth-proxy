@@ -4,6 +4,12 @@ Heroku app, build with https://github.com/heroku/heroku-buildpack-go
 
 == Cheatsheet
 
+.Push to Heroku
+[source,bash]
+----
+git push asyncapi-directory main
+----
+
 .Set config
 [source,bash]
 ----
