@@ -1,1 +1,11 @@
 = GitHub OAuth Proxy
+
+Heroku app, build with https://github.com/heroku/heroku-buildpack-go
+
+== Cheatsheet
+
+.Set config
+[source,bash]
+----
+heroku config:set GIN_MODE=release --remote asyncapi-directory
+----
