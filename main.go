@@ -48,7 +48,7 @@ func main() {
 
 	quit := make(chan os.Signal)
 	defer close(quit)
-	signal.Notify(quit, os.Interrupt)
+	signal.Notify(quit, os.Interrupt, os.Kill)
 	select {
 	case <-quit:
 		// Wait for interrupt signal to gracefully shutdown the server with

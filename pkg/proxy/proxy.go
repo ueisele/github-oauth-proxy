@@ -98,7 +98,6 @@ func (p *proxy) accessToken(c *gin.Context) {
 	query.Add("code", code)
 	query.Add("redirect_uri", redirectUri)
 	req.URL.RawQuery = query.Encode()
-	log.Println(req.URL.String())
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
