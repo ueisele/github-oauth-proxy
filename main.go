@@ -21,9 +21,29 @@ func main() {
 		log.Fatal("$PORT must be an integer")
 	}
 
+	clientId := os.Getenv("CLIENT_ID")
+	if clientId == "" {
+		log.Fatal("$CLIENT_ID must be set")
+	}
+
+	clientSecret := os.Getenv("CLIENT_SECRET")
+	if clientSecret == "" {
+		log.Fatal("$CLIENT_SECRET must be set")
+	}
+
+	allowOrigin := os.Getenv("ALLOW_ORIGIN")
+	if allowOrigin == "" {
+		log.Fatal("$ALLOW_ORIGIN must be set")
+	}
+
 	done := make(chan error, 1)
 	defer close(done)
-	server := proxy.NewProxy(proxy.Config{Port: port}, done)
+	server := proxy.NewProxy(proxy.Config{
+		Port: port,
+		ClientId: clientId,
+		ClientSecret: clientSecret,
+		AllowOrigin: allowOrigin,
+	}, done)
 	server.Run()
 
 	quit := make(chan os.Signal)

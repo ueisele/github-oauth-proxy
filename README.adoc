@@ -14,4 +14,7 @@ git push asyncapi-directory main
 [source,bash]
 ----
 heroku config:set GIN_MODE=release --remote asyncapi-directory
+heroku config:set CLIENT_ID="${CLIENT_ID}" --remote asyncapi-directory
+heroku config:set CLIENT_SECRET=${CLIENT_SECRET} --remote asyncapi-directory
+heroku config:set ALLOW_ORIGIN=${ALLOW_ORIGIN} --remote asyncapi-directory
 ----
