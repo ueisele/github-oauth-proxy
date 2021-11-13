@@ -1,8 +1,30 @@
 = GitHub OAuth Proxy
 
+GitHub does only support link:https://datatracker.ietf.org/doc/html/rfc6749#section-4.1[OAuth 2 Authorization Code Grant] and link:https://datatracker.ietf.org/doc/html/rfc8628[OAuth 2 Device Authorization Grant] as described by the link:https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps[Authorizing OAuth apps] documentation.
+
+Both flows are only working with confidential clients, which is not the case for SPAs. In order to ensure that these flows are not used in SPAs, GitHub does not include the link:https://developer.mozilla.org/de/docs/Web/HTTP/CORS[CORS] link:https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors/CORSMissingAllowOrigin[access-control-allow-origin] header in responses to requests to https://github.com/login/oauth/access_token.
+
+This proxy provides an _access_token_ endpoint which supports token requests without client secrets and also includes the _access-control-allow-origin_ in its responses.
+
+In order to make it save, this proxy is started with a fixed client id and secret and with an accepted origin domain.
+
+This application has been developed to be deployed on Heroku, however, it works also as standalone application.
+
 Heroku app, build with https://github.com/heroku/heroku-buildpack-go
 
-== Cheatsheet
+== Heroku Deployment
+
+This application has been developed in order to evaluate access to GitHub content from an SPA. Therefore, a single instance for the link:https://github.com/ueisele/showcase-asyncapi-api/tree/directory[asyncapi-directory] application has been deployed to Heroku.
+
+It is reachable at: https://githuboauth-asyncapidirectory.herokuapp.com
+
+=== Heroku Cheatsheet
+
+.Create new Heroku app
+[source,bash]
+----
+heroku apps:create --region eu --remote asyncapi-directory githuboauth-asyncapidirectory
+----
 
 .Push to Heroku
 [source,bash]
