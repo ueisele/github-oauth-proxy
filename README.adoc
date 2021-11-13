@@ -6,11 +6,11 @@ Both flows are only working with confidential clients, which is not the case for
 
 This proxy provides an _access_token_ endpoint which supports token requests without client secrets and also includes the _access-control-allow-origin_ in its responses.
 
-In order to make it save, this proxy is started with a fixed client id and secret and with an accepted origin domain.
+In order to make it secure, this proxy is started with a fixed client id and secret and with a fixed value for the _access-control-allow-origin_ header.
 
 This application has been developed to be deployed on Heroku, however, it works also as standalone application.
 
-Heroku app, build with https://github.com/heroku/heroku-buildpack-go
+Heroku app has been build with build pack: https://github.com/heroku/heroku-buildpack-go
 
 == Heroku Deployment
 
