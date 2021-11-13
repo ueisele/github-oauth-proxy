@@ -75,8 +75,17 @@ type token struct {
 }
 
 func (p *proxy) accessToken(c *gin.Context) {
+	c.Header("Content-Type", "application/json")
+	c.Header("Access-Control-Allow-Origin", p.config.AllowOrigin)
+
 	code, hasCode := c.GetQuery("code")
+	if !hasCode {
+		code, hasCode = c.GetPostForm("code")
+	}
 	redirectUri, hasRedirectUri := c.GetQuery("redirect_uri")
+	if !hasRedirectUri {
+		redirectUri, hasRedirectUri = c.GetPostForm("redirect_uri")
+	}
 	if !hasCode || !hasRedirectUri {
 		c.AbortWithStatusJSON(http.StatusBadRequest, struct{Error string}{Error: "Requires 'code' and 'redirect_uri' parameters!"})
 		return
@@ -123,7 +132,5 @@ func (p *proxy) accessToken(c *gin.Context) {
 		return
 	}
 
-	c.Header("Content-Type", "application/json")
-	c.Header("Access-Control-Allow-Origin", p.config.AllowOrigin)
 	c.JSON(resp.StatusCode, tokenResponse)
 }
